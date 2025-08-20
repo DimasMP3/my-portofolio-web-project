@@ -1,4 +1,4 @@
-🎨 Nama Saya — Portofolio Pribadi (Next.js)
+🎨 Nama Saya — Dimas Maulana Putra
 
 ![brand-icon](./public/brand-icon.svg)
 
