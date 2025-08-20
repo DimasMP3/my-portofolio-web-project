@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🎨 Nama Saya — Portofolio Pribadi (Next.js)
 
-## Getting Started
+![brand-icon](./public/brand-icon.svg)
 
-First, run the development server:
+Halo — ini adalah portofolio pribadi saya yang dibuat dengan Next.js (App Router). Di sini saya menampilkan proyek, galeri, sertifikat, dan eksperimen UI/UX seperti chatbot interaktif dan background animatif.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+> Headline singkat: "Mendesain antarmuka yang ramah pengguna, membangun interaksi yang memikat."
+
+✨ Sorotan
+- Halaman: About, Projects, Gallery, Certificates, Games, Contact
+- Komponen UI custom dan reusable
+- Chatbot floating untuk demo interaksi sederhana
+- Optimal untuk deploy ke Vercel
+
+🗂 Struktur proyek (lokasi kunci)
+- `app/` — routing & halaman utama
+- `src/app/components/` — komponen UI (sidebar, chatbot, interactive background)
+- `public/` — ikon, gambar galeri, sertifikat
+
+🛠 Cara jalankan (lokal)
+1) Pasang dependensi
+
+```powershell
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2) Jalankan development server
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```powershell
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3) Buka: http://localhost:3000
 
-## Learn More
+📦 Build & Deploy
+- Build: `npm run build`
+- Start: `npm run start`
+- Deploy: rekomendasi Vercel (otomatis mendeteksi Next.js)
 
-To learn more about Next.js, take a look at the following resources:
+🚀 Teknologi
+- Next.js, React, TypeScript
+- PostCSS / Tailwind (jika terkonfigurasi)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+🤝 Ingin menyesuaikan README ini?
+- Saya bisa menambahkan: badge CI, badge license, contoh screenshot, demo GIF, dan instruksi environment (Node/NPM versi).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Jika mau, beri tahu bagaimana kamu ingin menampilkan nama, bio singkat, dan tautan (GitHub, LinkedIn, live demo). Saya akan memperbarui README dengan informasi itu dan menambahkan screenshot atau badge sesuai permintaan.

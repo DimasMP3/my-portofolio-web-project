@@ -1,0 +1,316 @@
+"use client"
+
+import type React from "react"
+
+import { Card } from "@/app/components/ui/card"
+import { Badge } from "@/app/components/ui/badge"
+import { Button } from "@/app/components/ui/button"
+import { ExternalLink, Github, Star, GripVertical } from "lucide-react"
+import { useState, useEffect } from "react"
+
+export function ProjectsSection() {
+  const [displayText, setDisplayText] = useState("")
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [projects, setProjects] = useState([
+    {
+      id: 1,
+      title: "E-Commerce Platform",
+      description:
+        "A full-stack e-commerce platform built with Next.js, featuring user authentication, product management, shopping cart, and payment integration with modern UI/UX design.",
+      image: "/modern-ecommerce-interface.png",
+      technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
+      liveUrl: "#",
+      githubUrl: "#",
+      featured: true,
+      status: "Live",
+    },
+    {
+      id: 2,
+      title: "Task Management Dashboard",
+      description:
+        "A collaborative task management application with real-time updates, drag-and-drop functionality, team collaboration features, and advanced analytics dashboard.",
+      image: "/modern-task-dashboard.png",
+      technologies: ["React", "Node.js", "Socket.io", "MongoDB", "Express"],
+      liveUrl: "#",
+      githubUrl: "#",
+      featured: true,
+      status: "In Development",
+    },
+    {
+      id: 3,
+      title: "Weather Analytics Dashboard",
+      description:
+        "A responsive weather dashboard that displays current weather conditions and forecasts for multiple cities with beautiful data visualizations and charts.",
+      image: "/weather-dashboard-interface.png",
+      technologies: ["Vue.js", "Chart.js", "OpenWeather API", "CSS3"],
+      liveUrl: "#",
+      githubUrl: "#",
+      featured: false,
+      status: "Live",
+    },
+    {
+      id: 4,
+      title: "Modern Portfolio Website",
+      description:
+        "A modern, responsive portfolio website showcasing projects and skills with smooth animations, dark theme support, and optimized performance.",
+      image: "/modern-portfolio-website.png",
+      technologies: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
+      liveUrl: "#",
+      githubUrl: "#",
+      featured: false,
+      status: "Live",
+    },
+    {
+      id: 5,
+      title: "Blog Platform",
+      description:
+        "A full-featured blog platform with markdown support, comment system, and admin dashboard for content management with SEO optimization.",
+      image: "/modern-blog-platform.png",
+      technologies: ["React", "Node.js", "MongoDB", "Express", "Markdown"],
+      liveUrl: "#",
+      githubUrl: "#",
+      featured: false,
+      status: "Live",
+    },
+    {
+      id: 6,
+      title: "Real-time Chat Application",
+      description:
+        "Real-time chat application with private messaging, group chats, file sharing, emoji support, and end-to-end encryption.",
+      image: "/modern-chat-app.png",
+      technologies: ["React", "Socket.io", "Node.js", "MongoDB"],
+      liveUrl: "#",
+      githubUrl: "#",
+      featured: false,
+      status: "Live",
+    },
+  ])
+
+  const [draggedItem, setDraggedItem] = useState<number | null>(null)
+
+  const typingTexts = ["Recent Projects", "Web Applications", "Full-Stack Solutions", "Creative Builds"]
+
+  useEffect(() => {
+    const currentText = typingTexts[currentIndex]
+    const timeout = setTimeout(
+      () => {
+        if (!isDeleting) {
+          if (displayText.length < currentText.length) {
+            setDisplayText(currentText.slice(0, displayText.length + 1))
+          } else {
+            setTimeout(() => setIsDeleting(true), 2000)
+          }
+        } else {
+          if (displayText.length > 0) {
+            setDisplayText(displayText.slice(0, -1))
+          } else {
+            setIsDeleting(false)
+            setCurrentIndex((prev) => (prev + 1) % typingTexts.length)
+          }
+        }
+      },
+      isDeleting ? 50 : 100,
+    )
+
+    return () => clearTimeout(timeout)
+  }, [displayText, currentIndex, isDeleting, typingTexts])
+
+  const handleDragStart = (e: React.DragEvent, projectId: number) => {
+    setDraggedItem(projectId)
+    e.dataTransfer.effectAllowed = "move"
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = "move"
+  }
+
+  const handleDrop = (e: React.DragEvent, targetId: number) => {
+    e.preventDefault()
+
+    if (draggedItem === null || draggedItem === targetId) return
+
+    const newProjects = [...projects]
+    const draggedIndex = newProjects.findIndex((p) => p.id === draggedItem)
+    const targetIndex = newProjects.findIndex((p) => p.id === targetId)
+
+    const [draggedProject] = newProjects.splice(draggedIndex, 1)
+    newProjects.splice(targetIndex, 0, draggedProject)
+
+    setProjects(newProjects)
+    setDraggedItem(null)
+  }
+
+  const handleDragEnd = () => {
+    setDraggedItem(null)
+  }
+
+  const featuredProjects = projects.filter((project) => project.featured)
+  const otherProjects = projects.filter((project) => !project.featured)
+
+  return (
+    <div className="space-y-10 animate-fade-in-up">
+      <div>
+        <h1 className="text-5xl font-bold gradient-text mb-4 font-mono">
+          {displayText}
+          <span className="animate-blink-caret">|</span>
+        </h1>
+        <p className="text-xl text-muted-foreground">
+          Some of my recent work and personal projects that showcase my skills
+        </p>
+      </div>
+
+      {/* Featured Projects */}
+      <div>
+        <h2 className="text-3xl font-semibold mb-8 flex items-center gap-3">
+          <Star className="h-8 w-8 text-yellow-500" />
+          Featured Projects
+        </h2>
+        <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+          {featuredProjects.map((project, index) => (
+            <Card
+              key={project.id}
+              draggable
+              onDragStart={(e) => handleDragStart(e, project.id)}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, project.id)}
+              onDragEnd={handleDragEnd}
+              className={`animate-scale-in animate-delay-${(index + 1) * 200} hover-lift group overflow-hidden cursor-move aspect-square relative ${
+                draggedItem === project.id ? "opacity-50 scale-95" : ""
+              } transition-all duration-200 bg-slate-800/50 border-slate-700/50`}
+            >
+              <div className="absolute top-3 left-3 z-30 opacity-0 group-hover:opacity-100 transition-opacity">
+                <GripVertical className="h-5 w-5 text-slate-400" />
+              </div>
+
+              <div className="absolute inset-0">
+                <img
+                  src={project.image || "/placeholder.svg"}
+                  alt={project.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute top-4 right-3 z-20">
+                  <Badge
+                    variant={project.status === "Live" ? "default" : "secondary"}
+                    className="bg-background/80 backdrop-blur-sm"
+                  >
+                    {project.status}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-900/95 via-slate-900/90 to-transparent text-white z-20">
+                <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+                  {project.title}
+                </h3>
+                <p className="text-slate-300 mb-3 text-sm leading-relaxed line-clamp-2">{project.description}</p>
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {project.technologies.slice(0, 3).map((tech) => (
+                    <Badge key={tech} variant="outline" className="text-xs bg-slate-800/50 border-slate-600">
+                      {tech}
+                    </Badge>
+                  ))}
+                  {project.technologies.length > 3 && (
+                    <Badge variant="outline" className="text-xs bg-slate-800/50 border-slate-600">
+                      +{project.technologies.length - 3}
+                    </Badge>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" className="flex-1" asChild>
+                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-3 w-3 mr-1" />
+                      Live Demo
+                    </a>
+                  </Button>
+                  <Button variant="outline" size="sm" asChild>
+                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                      <Github className="h-3 w-3" />
+                      Code
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Other Projects */}
+      <div>
+        <h2 className="text-3xl font-semibold mb-8 flex items-center gap-3">
+          <span className="w-3 h-8 bg-gradient-to-b from-primary to-primary/50 rounded-full"></span>
+          Other Projects
+        </h2>
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {otherProjects.map((project, index) => (
+            <Card
+              key={project.id}
+              draggable
+              onDragStart={(e) => handleDragStart(e, project.id)}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, project.id)}
+              onDragEnd={handleDragEnd}
+              className={`animate-scale-in animate-delay-${(index + 3) * 100} hover-lift group overflow-hidden cursor-move aspect-square relative ${
+                draggedItem === project.id ? "opacity-50 scale-95" : ""
+              } transition-all duration-200 bg-slate-800/50 border-slate-700/50`}
+            >
+              <div className="absolute top-2 left-2 z-30 opacity-0 group-hover:opacity-100 transition-opacity">
+                <GripVertical className="h-4 w-4 text-slate-400" />
+              </div>
+
+              <div className="absolute inset-0">
+                <img
+                  src={project.image || "/placeholder.svg"}
+                  alt={project.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3 z-20">
+                  <Badge
+                    variant={project.status === "Live" ? "default" : "secondary"}
+                    className="bg-background/80 backdrop-blur-sm text-xs"
+                  >
+                    {project.status}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-slate-900/95 via-slate-900/90 to-transparent text-white z-20">
+                <h3 className="text-base font-semibold mb-1 group-hover:text-primary transition-colors">
+                  {project.title}
+                </h3>
+                <p className="text-slate-300 mb-2 text-xs leading-relaxed line-clamp-2">{project.description}</p>
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {project.technologies.slice(0, 2).map((tech) => (
+                    <Badge key={tech} variant="outline" className="text-xs bg-slate-800/50 border-slate-600">
+                      {tech}
+                    </Badge>
+                  ))}
+                  {project.technologies.length > 2 && (
+                    <Badge variant="outline" className="text-xs bg-slate-800/50 border-slate-600">
+                      +{project.technologies.length - 2}
+                    </Badge>
+                  )}
+                </div>
+                <div className="flex gap-1">
+                  <Button size="sm" className="flex-1 text-xs py-1" asChild>
+                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-3 w-3 mr-1" />
+                      Demo
+                    </a>
+                  </Button>
+                  <Button variant="outline" size="sm" className="text-xs py-1 bg-transparent" asChild>
+                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                      <Github className="h-3 w-3" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
