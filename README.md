@@ -1,4 +1,4 @@
-🎨 Nama Saya — Portofolio Pribadi (Next.js)
+🎨 Nama Saya — Dimas Maulana Putra
 
 ![brand-icon](./public/brand-icon.svg)
 
@@ -41,7 +41,4 @@ npm run dev
 - Next.js, React, TypeScript
 - PostCSS / Tailwind (jika terkonfigurasi)
 
-🤝 Ingin menyesuaikan README ini?
-- Saya bisa menambahkan: badge CI, badge license, contoh screenshot, demo GIF, dan instruksi environment (Node/NPM versi).
 
-Jika mau, beri tahu bagaimana kamu ingin menampilkan nama, bio singkat, dan tautan (GitHub, LinkedIn, live demo). Saya akan memperbarui README dengan informasi itu dan menambahkan screenshot atau badge sesuai permintaan.
