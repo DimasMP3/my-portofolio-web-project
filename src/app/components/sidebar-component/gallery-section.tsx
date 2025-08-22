@@ -23,6 +23,9 @@ interface Photo {
 export function GallerySection() {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
+  const [displayedText, setDisplayedText] = useState("")
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [currentTextIndex, setCurrentTextIndex] = useState(0)
 
   const [draggedItem, setDraggedItem] = useState<number | null>(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
@@ -203,6 +206,34 @@ export function GallerySection() {
     [dragOffset, getCardDimensions],
   )
 
+  // Typing animation text variations
+  const textVariations = [
+    "My Life in Pictures",
+    "Capturing Memories",
+    "Visual Journey",
+    "Photo Stories",
+    "Life Through Lens"
+  ]
+
+  useEffect(() => {
+    const currentText = textVariations[currentTextIndex]
+    const typingSpeed = isDeleting ? 50 : 100
+    const pauseTime = isDeleting ? 500 : 2000
+
+    const timeout = setTimeout(() => {
+      if (!isDeleting && displayedText === currentText) {
+        setTimeout(() => setIsDeleting(true), pauseTime)
+      } else if (isDeleting && displayedText === "") {
+        setIsDeleting(false)
+        setCurrentTextIndex((prev) => (prev + 1) % textVariations.length)
+      } else {
+        setDisplayedText((prev) => (isDeleting ? prev.slice(0, -1) : currentText.slice(0, prev.length + 1)))
+      }
+    }, typingSpeed)
+
+    return () => clearTimeout(timeout)
+  }, [displayedText, isDeleting, currentTextIndex, textVariations])
+
   const getContainerDimensions = useCallback(() => {
     const { width: cardWidth, height: cardHeight } = getCardDimensions()
     const gap = 24
@@ -236,7 +267,10 @@ export function GallerySection() {
           <span className="text-sm font-medium text-slate-300">Life Gallery</span>
         </div>
         <h2 className="text-3xl md:text-4xl font-bold text-white">
-          My Life in <span className="text-blue-400">Pictures</span>
+          <span className="font-mono">
+            {displayedText}
+            <span className="animate-pulse text-blue-400">|</span>
+          </span>
         </h2>
         <p className="text-slate-400 max-w-2xl mx-auto">
           A collection of moments that define my journey as a developer and student
