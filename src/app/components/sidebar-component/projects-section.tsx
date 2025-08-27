@@ -39,25 +39,25 @@ export function ProjectsSection() {
     },
     {
       id: 3,
-      title: "Weather Analytics Dashboard",
+      title: "Portfolio Website Project",
       description:
-        "A responsive weather dashboard that displays current weather conditions and forecasts for multiple cities with beautiful data visualizations and charts.",
-      image: "/image/project/projek2.png",
-      technologies: ["Vue.js", "Chart.js", "OpenWeather API", "CSS3"],
-      liveUrl: "#",
-      githubUrl: "#",
+         "A modern portfolio website showcasing projects and skills with responsive design, clean layout, and interactive elements.",
+      image: "/image/project/projek3.png",
+      technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+      liveUrl: "https://indah-porto.vercel.app/",
+      githubUrl: "https://github.com/DimasMP3/project-porto",
       featured: false,
       status: "Live",
     },
     {
       id: 4,
-      title: "Modern Portfolio Website",
+      title: "Arduino Project",
       description:
-        "A modern, responsive portfolio website showcasing projects and skills with smooth animations, dark theme support, and optimized performance.",
-      image: "/modern-portfolio-website.png",
-      technologies: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
-      liveUrl: "#",
-      githubUrl: "#",
+        "Internet of Things (IoT) dashboard for smart irrigation system monitoring and control.",
+      image: "/image/project/projek4.png",
+      technologies: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript", "MQTT", "Arduino", "C++", "Supabase"],
+      liveUrl: "https://github.com/DimasMP3/Sistem-Irigasi-Pintar-Arduino-Project",
+      githubUrl: "https://github.com/DimasMP3/Sistem-Irigasi-Pintar-Arduino-Project",
       featured: false,
       status: "Live",
     },
@@ -276,15 +276,16 @@ export function ProjectsSection() {
                 <GripVertical className="h-4 w-4 text-slate-400" />
               </div>
 
-              <div className="absolute inset-0">
-                <div className="w-full h-full flex items-start justify-center pt-3">
+              {/* Image Area - 50% height */}
+              <div className="absolute inset-0 h-[50%]">
+                <div className="w-full h-full flex items-center justify-center pt-2">
                   <img
                     src={project.image || "/placeholder.svg"}
                     alt={project.title}
-                    className="max-w-full max-h-[70%] object-contain group-hover:scale-105 transition-transform duration-500"
+                    className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
-                <div className="absolute top-3 right-3 z-20">
+                <div className="absolute top-2 right-2 z-20">
                   <Badge
                     variant={project.status === "Live" ? "default" : "secondary"}
                     className="bg-background/80 backdrop-blur-sm text-xs"
@@ -294,24 +295,27 @@ export function ProjectsSection() {
                 </div>
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-slate-900/95 via-slate-900/90 to-transparent text-white z-20">
-                <h3 className="text-base font-semibold mb-1 group-hover:text-primary transition-colors">
-                  {project.title}
-                </h3>
-                <p className="text-slate-300 mb-2 text-xs leading-relaxed line-clamp-2">{project.description}</p>
-                <div className="flex flex-wrap gap-1 mb-2">
-                  {project.technologies.slice(0, 2).map((tech) => (
-                    <Badge key={tech} variant="outline" className="text-xs bg-slate-800/50 border-slate-600">
-                      {tech}
-                    </Badge>
-                  ))}
-                  {project.technologies.length > 2 && (
-                    <Badge variant="outline" className="text-xs bg-slate-800/50 border-slate-600">
-                      +{project.technologies.length - 2}
-                    </Badge>
-                  )}
+              {/* Text Area - 55% height */}
+              <div className="absolute bottom-0 left-0 right-0 h-[55%] p-3 bg-gradient-to-t from-slate-900 via-slate-900/98 to-slate-900/85 text-white z-20 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-base font-semibold mb-1 group-hover:text-primary transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="text-slate-300 mb-2 text-xs leading-relaxed line-clamp-2">{project.description}</p>
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {project.technologies.slice(0, 2).map((tech) => (
+                      <Badge key={tech} variant="outline" className="text-xs bg-slate-800/50 border-slate-600">
+                        {tech}
+                      </Badge>
+                    ))}
+                    {project.technologies.length > 2 && (
+                      <Badge variant="outline" className="text-xs bg-slate-800/50 border-slate-600">
+                        +{project.technologies.length - 2}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-1 mt-auto">
                   <Button size="sm" className="flex-1 text-xs py-1" asChild>
                     <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="h-3 w-3 mr-1" />
