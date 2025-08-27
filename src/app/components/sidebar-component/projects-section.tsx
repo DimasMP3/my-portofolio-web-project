@@ -5,7 +5,7 @@ import type React from "react"
 import { Card } from "@/app/components/ui/card"
 import { Badge } from "@/app/components/ui/badge"
 import { Button } from "@/app/components/ui/button"
-import { ExternalLink, Github, Star, GripVertical } from "lucide-react"
+import { ExternalLink, Github, Star, GripVertical, X, Calendar, Code } from "lucide-react"
 import { useState, useEffect } from "react"
 
 export function ProjectsSection() {
@@ -19,7 +19,7 @@ export function ProjectsSection() {
       description:
         "Web application for managing activities or events, displaying and managing user activity lists.",
       image: "/image/project/projek1.png",
-      technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
+      technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
       liveUrl: "https://revou-project-activity-web.vercel.app/",
       githubUrl: "https://github.com/DimasMP3/revou-project-activity-web",
       featured: true,
@@ -27,13 +27,13 @@ export function ProjectsSection() {
     },
     {
       id: 2,
-      title: "Task Management Dashboard",
+      title: "Donation Website Panti Asuhan",
       description:
-        "A collaborative task management application with real-time updates, drag-and-drop functionality, team collaboration features, and advanced analytics dashboard.",
+        "This website serves as an information and donation platform to support orphanage activities.",
       image: "/image/project/projek2.png",
-      technologies: ["React", "Node.js", "Socket.io", "MongoDB", "Express"],
-      liveUrl: "#",
-      githubUrl: "#",
+      technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Payment Gateway", "Supabase"],
+      liveUrl: "https://rumahkasihku.vercel.app/",
+      githubUrl: "https://github.com/DimasMP3/rumahkasihku",
       featured: true,
       status: "Live",
     },
@@ -42,7 +42,7 @@ export function ProjectsSection() {
       title: "Weather Analytics Dashboard",
       description:
         "A responsive weather dashboard that displays current weather conditions and forecasts for multiple cities with beautiful data visualizations and charts.",
-      image: "/image/project/projek1.png",
+      image: "/image/project/projek2.png",
       technologies: ["Vue.js", "Chart.js", "OpenWeather API", "CSS3"],
       liveUrl: "#",
       githubUrl: "#",
@@ -88,6 +88,8 @@ export function ProjectsSection() {
   ])
 
   const [draggedItem, setDraggedItem] = useState<number | null>(null)
+  const [selectedProject, setSelectedProject] = useState<any>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const typingTexts = ["Recent Projects", "Web Applications", "Full-Stack Solutions", "Creative Builds"]
 
@@ -146,6 +148,16 @@ export function ProjectsSection() {
     setDraggedItem(null)
   }
 
+  const handleProjectClick = (project: any) => {
+    setSelectedProject(project)
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setSelectedProject(null)
+  }
+
   const featuredProjects = projects.filter((project) => project.featured)
   const otherProjects = projects.filter((project) => !project.featured)
 
@@ -176,9 +188,10 @@ export function ProjectsSection() {
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, project.id)}
               onDragEnd={handleDragEnd}
-              className={`animate-scale-in animate-delay-${(index + 1) * 200} hover-lift group overflow-hidden cursor-move aspect-square relative ${
+              onClick={() => handleProjectClick(project)}
+              className={`animate-scale-in animate-delay-${(index + 1) * 200} hover-lift group overflow-hidden cursor-pointer aspect-square relative ${
                 draggedItem === project.id ? "opacity-50 scale-95" : ""
-              } transition-all duration-200 bg-slate-800/50 border-slate-700/50`}
+              } transition-all duration-200 bg-slate-800/50 border-slate-700/50 hover:border-primary/50`}
             >
               <div className="absolute top-3 left-3 z-30 opacity-0 group-hover:opacity-100 transition-opacity">
                 <GripVertical className="h-5 w-5 text-slate-400" />
@@ -254,9 +267,10 @@ export function ProjectsSection() {
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, project.id)}
               onDragEnd={handleDragEnd}
-              className={`animate-scale-in animate-delay-${(index + 3) * 100} hover-lift group overflow-hidden cursor-move aspect-square relative ${
+              onClick={() => handleProjectClick(project)}
+              className={`animate-scale-in animate-delay-${(index + 3) * 100} hover-lift group overflow-hidden cursor-pointer aspect-square relative ${
                 draggedItem === project.id ? "opacity-50 scale-95" : ""
-              } transition-all duration-200 bg-slate-800/50 border-slate-700/50`}
+              } transition-all duration-200 bg-slate-800/50 border-slate-700/50 hover:border-primary/50`}
             >
               <div className="absolute top-2 left-2 z-30 opacity-0 group-hover:opacity-100 transition-opacity">
                 <GripVertical className="h-4 w-4 text-slate-400" />
@@ -315,6 +329,75 @@ export function ProjectsSection() {
           ))}
         </div>
       </div>
+
+      {/* Project Detail Modal */}
+      {isModalOpen && selectedProject && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={closeModal}>
+          <div className="bg-slate-900 rounded-2xl border border-slate-700 max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="relative">
+              <button
+                onClick={closeModal}
+                className="absolute top-4 right-4 z-10 bg-slate-800/80 hover:bg-slate-700 rounded-full p-2 transition-colors"
+              >
+                <X className="h-5 w-5 text-white" />
+              </button>
+              
+              <div className="aspect-video relative overflow-hidden rounded-t-2xl">
+                <img
+                  src={selectedProject.image || "/placeholder.svg"}
+                  alt={selectedProject.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-4 left-4">
+                  <Badge
+                    variant={selectedProject.status === "Live" ? "default" : "secondary"}
+                    className="bg-background/80 backdrop-blur-sm"
+                  >
+                    {selectedProject.status}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="p-6">
+                <h2 className="text-3xl font-bold text-white mb-4">{selectedProject.title}</h2>
+                
+                <p className="text-slate-300 text-lg leading-relaxed mb-6">
+                  {selectedProject.description}
+                </p>
+
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold text-white mb-3 flex items-center gap-2">
+                    <Code className="h-5 w-5" />
+                    Technologies Used
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.technologies.map((tech: string) => (
+                      <Badge key={tech} variant="outline" className="bg-slate-800/50 border-slate-600 text-slate-300">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <Button className="flex-1" asChild>
+                    <a href={selectedProject.liveUrl} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      View Live Demo
+                    </a>
+                  </Button>
+                  <Button variant="outline" className="flex-1" asChild>
+                    <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">
+                      <Github className="h-4 w-4 mr-2" />
+                      View Source Code
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
