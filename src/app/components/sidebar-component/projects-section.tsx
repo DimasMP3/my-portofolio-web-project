@@ -15,13 +15,13 @@ export function ProjectsSection() {
   const [projects, setProjects] = useState([
     {
       id: 1,
-      title: "E-Commerce Platform",
+      title: "Realtime Activity Tracker",
       description:
-        "A full-stack e-commerce platform built with Next.js, featuring user authentication, product management, shopping cart, and payment integration with modern UI/UX design.",
-      image: "/modern-ecommerce-interface.png",
+        "Web application for managing activities or events, displaying and managing user activity lists.",
+      image: "/image/project/projek1.png",
       technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL"],
-      liveUrl: "#",
-      githubUrl: "#",
+      liveUrl: "https://revou-project-activity-web.vercel.app/",
+      githubUrl: "https://github.com/DimasMP3/revou-project-activity-web",
       featured: true,
       status: "Live",
     },
@@ -30,19 +30,19 @@ export function ProjectsSection() {
       title: "Task Management Dashboard",
       description:
         "A collaborative task management application with real-time updates, drag-and-drop functionality, team collaboration features, and advanced analytics dashboard.",
-      image: "/modern-task-dashboard.png",
+      image: "/image/project/projek2.png",
       technologies: ["React", "Node.js", "Socket.io", "MongoDB", "Express"],
       liveUrl: "#",
       githubUrl: "#",
       featured: true,
-      status: "In Development",
+      status: "Live",
     },
     {
       id: 3,
       title: "Weather Analytics Dashboard",
       description:
         "A responsive weather dashboard that displays current weather conditions and forecasts for multiple cities with beautiful data visualizations and charts.",
-      image: "/weather-dashboard-interface.png",
+      image: "/image/project/projek1.png",
       technologies: ["Vue.js", "Chart.js", "OpenWeather API", "CSS3"],
       liveUrl: "#",
       githubUrl: "#",
@@ -185,11 +185,13 @@ export function ProjectsSection() {
               </div>
 
               <div className="absolute inset-0">
-                <img
-                  src={project.image || "/placeholder.svg"}
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+                <div className="w-full h-full flex items-start justify-center pt-4">
+                  <img
+                    src={project.image || "/placeholder.svg"}
+                    alt={project.title}
+                    className="max-w-full max-h-[70%] object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
                 <div className="absolute top-4 right-3 z-20">
                   <Badge
                     variant={project.status === "Live" ? "default" : "secondary"}
@@ -261,11 +263,13 @@ export function ProjectsSection() {
               </div>
 
               <div className="absolute inset-0">
-                <img
-                  src={project.image || "/placeholder.svg"}
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+                <div className="w-full h-full flex items-start justify-center pt-3">
+                  <img
+                    src={project.image || "/placeholder.svg"}
+                    alt={project.title}
+                    className="max-w-full max-h-[70%] object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
                 <div className="absolute top-3 right-3 z-20">
                   <Badge
                     variant={project.status === "Live" ? "default" : "secondary"}

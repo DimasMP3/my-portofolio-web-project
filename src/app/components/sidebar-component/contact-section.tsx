@@ -1,17 +1,9 @@
 "use client"
 
 import type React from "react"
-import { useEffect, useState, useMemo } from "react"
-// Asumsikan komponen ini ada di path yang benar
-// import { Card, CardContent } from "@/app/components/ui/card"
-// import { Button } from "@/app/components/ui/button"
-// import { Input } from "@/app/components/ui/input"
-// import { Textarea } from "@/app/components/ui/textarea"
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Instagram } from "lucide-react"
+import { useEffect, useState, useMemo, useRef } from "react"
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Instagram, User, MessageCircle } from "lucide-react"
 
-// --- Mock Components for Demonstration ---
-// Komponen-komponen ini adalah pengganti sementara agar kode bisa berjalan.
-// Ganti dengan impor asli Anda.
 const Card = ({ children, className }: { children: React.ReactNode; className?: string }) => (
   <div className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm ${className}`}>
     {children}
@@ -20,14 +12,27 @@ const Card = ({ children, className }: { children: React.ReactNode; className?: 
 const CardContent = ({ children, className }: { children: React.ReactNode; className?: string }) => (
   <div className={className}>{children}</div>
 )
-const Button = ({ children, className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <button
-    className={`bg-blue-600 text-white font-semibold rounded-lg flex items-center justify-center transition-colors hover:bg-blue-700 ${className}`}
-    {...props}
-  >
-    {children}
-  </button>
-)
+const Button = ({ children, className, variant = "default", size = "default", ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "default" | "outline"; size?: "default" | "sm" | "icon" }) => {
+  const baseClasses = "font-semibold rounded-lg flex items-center justify-center transition-colors"
+  const variantClasses = {
+    default: "bg-blue-600 text-white hover:bg-blue-700",
+    outline: "border border-gray-300 dark:border-gray-600 bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+  }
+  const sizeClasses = {
+    default: "px-4 py-2",
+    sm: "px-3 py-1 text-sm",
+    icon: "p-2"
+  }
+  
+  return (
+    <button
+      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+}
 const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
   <input
     className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
@@ -40,10 +45,7 @@ const Textarea = (props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
     {...props}
   ></textarea>
 )
-// --- End of Mock Components ---
 
-
-// Data konstan dipindahkan ke luar komponen untuk mencegah pembuatan ulang pada setiap render.
 const contactInfo = [
   {
     icon: Mail,
@@ -72,8 +74,6 @@ const socialLinks = [
 ]
 
 export default function App() {
-  // Menambahkan latar belakang gelap untuk pratinjau yang lebih baik
-  // PERBAIKAN UI: Menyesuaikan padding agar lebih granular di berbagai ukuran layar.
   return (
     <div className="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen p-4 sm:p-6 md:p-8">
         <ContactSection />
@@ -82,19 +82,58 @@ export default function App() {
 }
 
 
+interface Message {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  timestamp: Date;
+  isAdmin: boolean;
+}
+
 export function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    subject: "",
     message: "",
   })
+
+  const [messages, setMessages] = useState<Message[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [chatStarted, setChatStarted] = useState(false)
+  const [currentUserEmail, setCurrentUserEmail] = useState("")
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const [displayText, setDisplayText] = useState("")
   const [textIndex, setTextIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
 
   const typingTexts = useMemo(() => ["Contact Me", "Let's Connect", "Get In Touch", "Start a Project"], [])
+
+  // Scroll to bottom of messages
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  // Load existing messages for user
+  const loadMessages = async (email: string) => {
+    try {
+      const response = await fetch(`/api/contact?email=${encodeURIComponent(email)}`)
+      if (response.ok) {
+        const data = await response.json()
+        setMessages(data.messages.map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        })))
+      }
+    } catch (error) {
+      console.error('Error loading messages:', error)
+    }
+  }
 
   useEffect(() => {
     const handleTyping = () => {
@@ -119,10 +158,54 @@ export function ContactSection() {
     return () => clearTimeout(timeout)
   }, [displayText, isDeleting, textIndex, typingTexts])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle starting chat (name and email submission)
+  const handleStartChat = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Form submitted:", formData)
-    setFormData({ name: "", email: "", subject: "", message: "" })
+    if (formData.name && formData.email) {
+      setChatStarted(true)
+      setCurrentUserEmail(formData.email)
+      loadMessages(formData.email)
+    }
+  }
+
+  // Handle sending message in chat
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!formData.message.trim() || isLoading) return
+
+    setIsLoading(true)
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'send_message',
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        // Add user message immediately
+        setMessages(prev => [...prev, {
+          ...data.userMessage,
+          timestamp: new Date(data.userMessage.timestamp)
+        }])
+        
+        // Clear message field
+        setFormData(prev => ({ ...prev, message: '' }))
+      } else {
+        console.error('Failed to send message')
+      }
+    } catch (error) {
+      console.error('Error sending message:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -130,6 +213,13 @@ export function ContactSection() {
       ...prev,
       [e.target.name]: e.target.value,
     }))
+  }
+
+  const resetChat = () => {
+    setChatStarted(false)
+    setMessages([])
+    setFormData({ name: "", email: "", message: "" })
+    setCurrentUserEmail("")
   }
 
   return (
@@ -144,15 +234,7 @@ export function ContactSection() {
         </p>
       </div>
 
-      {/* PERBAIKAN UI RESPONSIVE:
-        1. Mengganti `lg:grid-cols-2` menjadi `md:grid-cols-2`.
-           Ini membuat layout menjadi 2 kolom lebih awal, yaitu di layar berukuran tablet (mulai dari 768px),
-           sehingga terlihat lebih seimbang dan tidak terlalu kosong.
-        2. Mengubah `gap-8` menjadi `gap-6 md:gap-8`.
-           Ini memberikan jarak yang sedikit lebih kecil di layar mobile dan jarak yang lebih besar di layar yang lebih lebar.
-      */}
       <div className="grid gap-6 md:gap-8 md:grid-cols-2">
-        {/* Kolom Informasi Kontak */}
         <div className="space-y-6">
           <Card className="border-gray-200/50 hover:border-blue-500/20 transition-colors h-full">
             <CardContent className="p-6 lg:p-8 flex flex-col h-full">
@@ -213,60 +295,154 @@ export function ContactSection() {
           </Card>
         </div>
 
-        {/* Kolom Form Kontak */}
+        {/* Chat Interface */}
         <Card className="border-gray-200/50 hover:border-blue-500/20 transition-colors">
           <CardContent className="p-6 lg:p-8">
-            <h2 className="text-2xl lg:text-3xl font-semibold mb-6">Send Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Input
-                    name="name"
-                    placeholder="Your Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="h-12"
-                  />
+            {!chatStarted ? (
+              // Initial contact form
+              <>
+                <h2 className="text-2xl lg:text-3xl font-semibold mb-6">Start Conversation</h2>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Enter your details to send me a message
+                </p>
+                <form onSubmit={handleStartChat} className="space-y-6">
+                  <div className="space-y-4">
+                    <Input
+                      name="name"
+                      placeholder="Your Name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className="h-12"
+                    />
+                    <Input
+                      name="email"
+                      type="email"
+                      placeholder="Your Email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="h-12"
+                    />
+                  </div>
+                  <Button type="submit" className="w-full h-12 text-base hover:scale-[1.02] transition-transform">
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Start Messaging
+                  </Button>
+                </form>
+              </>
+            ) : (
+              // Chat interface
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-2xl lg:text-3xl font-semibold">Messages</h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {formData.name} • {formData.email}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={resetChat}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    New Message
+                  </Button>
                 </div>
-                <div className="space-y-2">
-                  <Input
-                    name="email"
-                    type="email"
-                    placeholder="Your Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="h-12"
-                  />
+
+                {/* Messages container */}
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg mb-4">
+                  <div className="h-96 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-800">
+                    {messages.length === 0 ? (
+                      <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+                        <div className="text-center">
+                          <MessageCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                          <p>No messages yet. Send your first message!</p>
+                        </div>
+                      </div>
+                    ) : (
+                      messages.map((message) => (
+                        <div
+                          key={message.id}
+                          className={`flex gap-3 items-start ${
+                            message.isAdmin ? "justify-start" : "justify-end"
+                          }`}
+                        >
+                          {message.isAdmin && (
+                            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                              <span className="text-white text-xs font-semibold">DM</span>
+                            </div>
+                          )}
+
+                          <div className="flex flex-col max-w-[80%]">
+                            <div
+                              className={`px-4 py-3 rounded-lg text-sm ${
+                                message.isAdmin
+                                  ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                  : "bg-blue-600 text-white"
+                              }`}
+                            >
+                              <p className="leading-relaxed break-words">{message.message}</p>
+                            </div>
+                            <p
+                              className={`text-xs mt-1 px-2 text-gray-500 dark:text-gray-400 ${
+                                message.isAdmin ? "text-left" : "text-right"
+                              }`}
+                            >
+                              {message.isAdmin ? "Dimas" : "You"} •{" "}
+                              {message.timestamp.toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </p>
+                          </div>
+
+                          {!message.isAdmin && (
+                            <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
+                              <User className="h-4 w-4 text-white" />
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    )}
+                    
+                    <div ref={messagesEndRef} />
+                  </div>
+
+                  {/* Message input */}
+                  <div className="border-t border-gray-200 dark:border-gray-700 p-4">
+                    <form onSubmit={handleSendMessage} className="flex gap-3">
+                      <Input
+                        name="message"
+                        placeholder="Type your message..."
+                        value={formData.message}
+                        onChange={handleChange}
+                        disabled={isLoading}
+                        className="flex-1"
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault()
+                            handleSendMessage(e)
+                          }
+                        }}
+                      />
+                      <Button
+                        type="submit"
+                        disabled={isLoading || !formData.message.trim()}
+                        className="px-4"
+                      >
+                        {isLoading ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <Send className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </form>
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Input
-                  name="subject"
-                  placeholder="Subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                  className="h-12"
-                />
-              </div>
-              <div className="space-y-2">
-                <Textarea
-                  name="message"
-                  placeholder="Your Message"
-                  rows={6}
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  className="resize-none"
-                />
-              </div>
-              <Button type="submit" className="w-full h-12 text-base hover:scale-[1.02] transition-transform">
-                <Send className="h-4 w-4 mr-2" />
-                Send Message
-              </Button>
-            </form>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
