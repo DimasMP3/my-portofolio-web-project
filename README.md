@@ -1,6 +1,6 @@
 <div align="center">
   <h1>🎨 Dimas Maulana Putra</h1>
-  <h3>Frontend Developer & UI/UX Enthusiast</h3>
+  <h3>Junior WengDev</h3>
   
   <img src="./public/brand-icon.svg" alt="Brand Icon" width="120" height="120" />
   
