@@ -39,12 +39,7 @@ const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
     {...props}
   />
 )
-const Textarea = (props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
-  <textarea
-    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
-    {...props}
-  ></textarea>
-)
+
 
 const contactInfo = [
   {
@@ -101,7 +96,6 @@ export function ContactSection() {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [chatStarted, setChatStarted] = useState(false)
-  const [currentUserEmail, setCurrentUserEmail] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const [displayText, setDisplayText] = useState("")
@@ -125,7 +119,7 @@ export function ContactSection() {
       const response = await fetch(`/api/contact?email=${encodeURIComponent(email)}`)
       if (response.ok) {
         const data = await response.json()
-        setMessages(data.messages.map((msg: any) => ({
+        setMessages(data.messages.map((msg: Message) => ({
           ...msg,
           timestamp: new Date(msg.timestamp)
         })))
@@ -162,7 +156,6 @@ export function ContactSection() {
     e.preventDefault()
     if (formData.name && formData.email) {
       setChatStarted(true)
-      setCurrentUserEmail(formData.email)
       loadMessages(formData.email)
     }
   }
@@ -215,7 +208,6 @@ export function ContactSection() {
     setChatStarted(false)
     setMessages([])
     setFormData({ name: "", email: "", message: "" })
-    setCurrentUserEmail("")
   }
 
   return (
@@ -226,7 +218,7 @@ export function ContactSection() {
           <span className="animate-pulse">|</span>
         </h1>
         <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Let's work together on your next project
+          Let&apos;s work together on your next project
         </p>
       </div>
 
@@ -237,7 +229,7 @@ export function ContactSection() {
               <div>
                 <h2 className="text-2xl lg:text-3xl font-semibold mb-6">Get in Touch</h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-                  I'm always interested in new opportunities and exciting projects. Whether you have a question or just
+                  I&apos;m always interested in new opportunities and exciting projects. Whether you have a question or just
                   want to say hi, feel free to reach out!
                 </p>
                 <div className="space-y-6">

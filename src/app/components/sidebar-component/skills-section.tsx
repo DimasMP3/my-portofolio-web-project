@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Card, CardContent } from "@/app/components/ui/card"
 import { Badge } from "@/app/components/ui/badge"
 import { Code2, Database, Globe, Wrench, Zap, Star, Sparkles, Trophy } from "lucide-react"
@@ -10,7 +10,7 @@ export function SkillsSection() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const typingTexts = ["Technical Skills", "Programming Languages", "Frameworks & Libraries", "Development Tools"]
+  const typingTexts = useMemo(() => ["Technical Skills", "Programming Languages", "Frameworks & Libraries", "Development Tools"], [])
 
   useEffect(() => {
     const currentText = typingTexts[currentIndex]

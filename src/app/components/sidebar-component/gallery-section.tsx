@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { Card, CardContent } from "@/app/components/ui/card"
 import { Button } from "@/app/components/ui/button"
 import { Badge } from "@/app/components/ui/badge"
@@ -207,13 +207,13 @@ export function GallerySection() {
   )
 
   // Typing animation text variations
-  const textVariations = [
+  const textVariations = useMemo(() => [
     "My Life in Pictures",
     "Capturing Memories",
     "Visual Journey",
     "Photo Stories",
     "Life Through Lens"
-  ]
+  ], [])
 
   useEffect(() => {
     const currentText = textVariations[currentTextIndex]

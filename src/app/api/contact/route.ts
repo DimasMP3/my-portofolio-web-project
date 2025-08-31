@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 // In-memory storage for messages (in production, you'd use a database)
-let messages: Array<{
+const messages: Array<{
   id: string;
   name: string;
   email: string;
@@ -92,7 +92,3 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Export function to get all messages (for admin use)
-export async function getAllMessages() {
-  return messages;
-}

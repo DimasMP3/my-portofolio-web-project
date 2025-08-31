@@ -1,7 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
-
 export default function InteractiveBackground() {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">

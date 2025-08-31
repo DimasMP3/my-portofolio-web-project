@@ -5,8 +5,9 @@ import type React from "react"
 import { Card } from "@/app/components/ui/card"
 import { Badge } from "@/app/components/ui/badge"
 import { Button } from "@/app/components/ui/button"
-import { ExternalLink, Github, Star, GripVertical, X, Calendar, Code } from "lucide-react"
-import { useState, useEffect } from "react"
+import { ExternalLink, Github, Star, GripVertical, X, Code } from "lucide-react"
+import { useState, useEffect, useMemo } from "react"
+import Image from "next/image"
 
 export function ProjectsSection() {
   const [displayText, setDisplayText] = useState("")
@@ -88,10 +89,10 @@ export function ProjectsSection() {
   ])
 
   const [draggedItem, setDraggedItem] = useState<number | null>(null)
-  const [selectedProject, setSelectedProject] = useState<any>(null)
+  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const typingTexts = ["Recent Projects", "Web Applications", "Full-Stack Solutions", "Creative Builds"]
+  const typingTexts = useMemo(() => ["Recent Projects", "Web Applications", "Full-Stack Solutions", "Creative Builds"], [])
 
   useEffect(() => {
     const currentText = typingTexts[currentIndex]
@@ -148,7 +149,7 @@ export function ProjectsSection() {
     setDraggedItem(null)
   }
 
-  const handleProjectClick = (project: any) => {
+  const handleProjectClick = (project: typeof projects[0]) => {
     setSelectedProject(project)
     setIsModalOpen(true)
   }
@@ -199,9 +200,11 @@ export function ProjectsSection() {
 
               <div className="absolute inset-0">
                 <div className="w-full h-full flex items-start justify-center pt-4">
-                  <img
+                  <Image
                     src={project.image || "/placeholder.svg"}
                     alt={project.title}
+                    width={400}
+                    height={300}
                     className="max-w-full max-h-[70%] object-contain group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -279,9 +282,11 @@ export function ProjectsSection() {
               {/* Image Area - 50% height */}
               <div className="absolute inset-0 h-[50%]">
                 <div className="w-full h-full flex items-center justify-center pt-2">
-                  <img
+                  <Image
                     src={project.image || "/placeholder.svg"}
                     alt={project.title}
+                    width={300}
+                    height={200}
                     className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -347,10 +352,11 @@ export function ProjectsSection() {
               </button>
               
               <div className="aspect-video relative overflow-hidden rounded-t-2xl">
-                <img
+                <Image
                   src={selectedProject.image || "/placeholder.svg"}
                   alt={selectedProject.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
                 <div className="absolute top-4 left-4">
                   <Badge

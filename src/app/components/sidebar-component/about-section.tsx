@@ -10,9 +10,8 @@ export function AboutSection() {
   const [displayedText, setDisplayedText] = useState("")
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const roles = ["Web Developer", "Vibe Coder", "Full Stack Developer", "AI Engineer", "Prompter Engineer"]
-
   useEffect(() => {
+    const roles = ["Web Developer", "Vibe Coder", "Full Stack Developer", "AI Engineer", "Prompter Engineer"]
     const currentRole = roles[currentRoleIndex]
     const typingSpeed = isDeleting ? 50 : 100
     const pauseTime = isDeleting ? 500 : 2000
@@ -29,7 +28,7 @@ export function AboutSection() {
     }, typingSpeed)
 
     return () => clearTimeout(timeout)
-  }, [displayedText, isDeleting, currentRoleIndex, roles])
+  }, [displayedText, isDeleting, currentRoleIndex])
 
   const quickInfo = [
     { icon: MapPin, label: "Location", value: "Indonesia", color: "text-green-500" },
@@ -64,7 +63,7 @@ export function AboutSection() {
       </div>
 
       <div className="relative">
-        <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-4">Hello, I'm Dimas Maulana Putra</h1>
+        <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-4">Hello, I&apos;m Dimas Maulana Putra</h1>
         <div className="text-lg md:text-xl text-muted-foreground mb-6 h-8 flex items-center">
           <span className="font-mono">
             {displayedText}
@@ -101,7 +100,7 @@ export function AboutSection() {
           </h2>
           <div className="space-y-4 text-muted-foreground leading-relaxed">
             <p className="text-base">
-              I'm a passionate web developer currently pursuing my degree in Informatic Engineering at Bina Sarana
+              I&apos;m a passionate web developer currently pursuing my degree in Informatic Engineering at Bina Sarana
               Informatika University. I love creating modern, responsive web applications using cutting-edge
               technologies.
             </p>
@@ -111,7 +110,7 @@ export function AboutSection() {
               full-stack development with a focus on React ecosystem and modern JavaScript frameworks.
             </p>
             <p className="text-base">
-              I'm always eager to learn new technologies and take on challenging projects that push my skills to the
+              I&apos;m always eager to learn new technologies and take on challenging projects that push my skills to the
               next level. Currently exploring advanced topics in cloud computing, microservices architecture, and AI
               integration.
             </p>

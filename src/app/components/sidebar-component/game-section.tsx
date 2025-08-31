@@ -26,7 +26,6 @@ export function GameSection() {
   const [selectedGame, setSelectedGame] = useState<GameType>("snake")
   const [displayedText, setDisplayedText] = useState("")
   const [isDeleting, setIsDeleting] = useState(false)
-  const [currentIndex, setCurrentIndex] = useState(0)
   const titleText = "Fun Game Zone"
 
   useEffect(() => {
