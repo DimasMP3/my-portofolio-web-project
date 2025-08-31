@@ -63,11 +63,11 @@ export function ProjectsSection() {
     },
     {
       id: 5,
-      title: "Blog Platform",
+      title: "Coming Soon",
       description:
-        "A full-featured blog platform with markdown support, comment system, and admin dashboard for content management with SEO optimization.",
+        "On Editing ...",
       image: "/modern-blog-platform.png",
-      technologies: ["React", "Node.js", "MongoDB", "Express", "Markdown"],
+      technologies: [],
       liveUrl: "#",
       githubUrl: "#",
       featured: false,
@@ -75,11 +75,11 @@ export function ProjectsSection() {
     },
     {
       id: 6,
-      title: "Real-time Chat Application",
+      title: "Coming Soon",
       description:
-        "Real-time chat application with private messaging, group chats, file sharing, emoji support, and end-to-end encryption.",
+        "On Editing ...",
       image: "/modern-chat-app.png",
-      technologies: ["React", "Socket.io", "Node.js", "MongoDB"],
+      technologies: [],
       liveUrl: "#",
       githubUrl: "#",
       featured: false,

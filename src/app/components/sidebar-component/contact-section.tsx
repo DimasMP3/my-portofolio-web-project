@@ -69,8 +69,8 @@ const contactInfo = [
 
 const socialLinks = [
   { icon: Github, href: "https://github.com/DimasMP3", label: "GitHub" },
-  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-  { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+  { icon: Linkedin, href: "https://www.linkedin.com/in/dimasmaulanaputra", label: "LinkedIn" },
+  { icon: Instagram, href: "https://www.instagram.com/dmsmlnaptra?igsh=YXF5aXVwc24zODU2", label: "Instagram" },
 ]
 
 export default function App() {
@@ -158,7 +158,6 @@ export function ContactSection() {
     return () => clearTimeout(timeout)
   }, [displayText, isDeleting, textIndex, typingTexts])
 
-  // Handle starting chat (name and email submission)
   const handleStartChat = (e: React.FormEvent) => {
     e.preventDefault()
     if (formData.name && formData.email) {
@@ -168,7 +167,6 @@ export function ContactSection() {
     }
   }
 
-  // Handle sending message in chat
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.message.trim() || isLoading) return
@@ -190,13 +188,11 @@ export function ContactSection() {
 
       if (response.ok) {
         const data = await response.json()
-        // Add user message immediately
         setMessages(prev => [...prev, {
           ...data.userMessage,
           timestamp: new Date(data.userMessage.timestamp)
         }])
         
-        // Clear message field
         setFormData(prev => ({ ...prev, message: '' }))
       } else {
         console.error('Failed to send message')
@@ -299,7 +295,6 @@ export function ContactSection() {
         <Card className="border-gray-200/50 hover:border-blue-500/20 transition-colors">
           <CardContent className="p-6 lg:p-8">
             {!chatStarted ? (
-              // Initial contact form
               <>
                 <h2 className="text-2xl lg:text-3xl font-semibold mb-6">Start Conversation</h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
