@@ -102,28 +102,6 @@ export function CertificatesSection() {
       image: "/image/sertificates/sertif8.png",
       position: { x: 0, y: 0 },
     },
-    {
-      id: 9,
-      title: "Cloud Computing Fundamentals",
-      issuer: "AWS",
-      date: "2024",
-      description: "Cloud infrastructure, deployment strategies, and AWS services fundamentals.",
-      skills: ["AWS", "Cloud Computing", "EC2", "S3"],
-      link: "#",
-      image: "/image/sertif1.png",
-      position: { x: 0, y: 0 },
-    },
-    {
-      id: 10,
-      title: "UI/UX Design Principles",
-      issuer: "Google",
-      date: "2023",
-      description: "User interface and user experience design fundamentals and best practices.",
-      skills: ["UI Design", "UX Design", "Figma", "Prototyping"],
-      link: "#",
-      image: "/image/sertif1.png",
-      position: { x: 0, y: 0 },
-    },
   ])
 
   const [draggedItem, setDraggedItem] = useState<number | null>(null)
@@ -141,7 +119,7 @@ export function CertificatesSection() {
     const { width: cardWidth, height: cardHeight } = getCardDimensions()
     const gap = 24
     const positions = []
-    const cols = 5 // Fixed 5 columns for horizontal scrolling
+    const cols = 5 
 
     for (let i = 0; i < certificates.length; i++) {
       const col = i % cols
@@ -246,7 +224,7 @@ export function CertificatesSection() {
 
     return {
       width: cols * (cardWidth + gap) + gap,
-      height: rows * (cardHeight + gap) + gap + 100, // Extra space for dragging
+      height: rows * (cardHeight + gap) + gap + 100, 
     }
   }, [certificates.length, getCardDimensions])
 
